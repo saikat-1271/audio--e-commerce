@@ -4,7 +4,7 @@ import { bannerProducts } from "@/public/imagesurl";
 
 const ItemComponent = () => {
   return (
-    <div className="flex flex-row flex-wrap justify-center gap-6 p-4">
+    <div className="flex flex-row flex-wrap justify-center gap-6 p-4 bg-transparent">
       {bannerProducts.map((item) => (
         <ItemCards key={item.id} item={item} />
       ))}
