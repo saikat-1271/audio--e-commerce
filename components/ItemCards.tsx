@@ -1,13 +1,25 @@
+"use client";
+
+import { useCart } from "@/store/cart";
 import Link from "next/link";
 import React from "react";
 
 const ItemCards = ({ item }) => {
+  const addToCart = useCart((state) => state.addToCart);
+  const cart = useCart((state) => state.cart);
+
+  const cartOperation = (item) => {
+    addToCart(item);
+  };
+
+  console.log(cart);
+
   return (
     <div className="w-100 m-4 hover:-translate-y-1 transition-transform duration-300 bg-transparent rounded-lg">
       <div className="bg-neutral-primary-soft max-w-sm p-4 border-default rounded-base">
-        <Link href={"/products/" + item.id}>
-          {/* IMAGE CONTAINER */}
-          <div className="relative h-64 w-full overflow-hidden rounded-lg">
+        {/* IMAGE CONTAINER */}
+        <div className="relative h-64 w-full overflow-hidden rounded-lg">
+          <Link href={"/products/" + item.id}>
             <img
               src={item.image}
               alt={item.title}
@@ -20,11 +32,14 @@ const ItemCards = ({ item }) => {
             </h3>
 
             {/* CART BUTTON */}
-            <button className="absolute bottom-2 right-2 bg-[#93BD57] text-white text-xl w-10 h-10 flex items-center justify-center rounded-lg shadow-md hover:scale-110 transition">
+          </Link>
+            <button
+              onClick={() => cartOperation(item)}
+              className="absolute bottom-2 right-2 bg-[#93BD57] text-white text-xl w-10 h-10 flex items-center justify-center rounded-lg shadow-md hover:scale-110 transition"
+            >
               🛒
             </button>
-          </div>
-        </Link>
+        </div>
       </div>
     </div>
   );

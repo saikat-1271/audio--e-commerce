@@ -7,38 +7,48 @@ import { Heart, Share2, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { bannerimages } from "@/public/imagesurl";
+import { useCart } from "@/store/cart";
 
 export default function ItemDetails({ product }) {
   const [activeImage, setActiveImage] = useState(bannerimages[0]);
-  console.log("product", product);
+  const addToCart = useCart((state) => state.addToCart);
+  const removeFromCart = useCart((state) => state.removeFromCart);
+  // const getQuantity = useCart((state) => state.getItemQuantity);
+  // const cart = useCart((state) => state.cart);
+
+  const addCart = (item) => {
+    addToCart(item);
+  };
+  const removeCart = (item) => {
+    removeFromCart(item);
+  };
+  const getItemQnt = useCart((s) => s.getItemQuantity(product.id));
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 bg-transparent top-2.50 p-6 lg:p-12 ">
       {/* LEFT: IMAGE GALLERY */}
       <div className="flex gap-4">
         <div className="flex flex-col gap-3">
-          {product.bannerimages.map(
-            (url, index) => (
-              <Card
-                key={index}
-                onClick={() => setActiveImage(url)}
-                className={cn(
-                  "w-20 h-24 overflow-hidden bg-transparent cursor-pointer border transition-all",
-                  activeImage === url
-                    ? "border-black ring-2 ring-black"
-                    : "hover:border-black"
-                )}
-              >
-                <Image
-                  src={url}
-                  alt={`thumbnail-${index}`}
-                  width={80}
-                  height={96}
-                  className="object-cover w-full h-full"
-                />
-              </Card>
-            )
-          )}
+          {product.bannerimages.map((url, index) => (
+            <Card
+              key={index}
+              onClick={() => setActiveImage(url)}
+              className={cn(
+                "w-20 h-24 overflow-hidden bg-transparent cursor-pointer border transition-all",
+                activeImage === url
+                  ? "border-black ring-2 ring-black"
+                  : "hover:border-black"
+              )}
+            >
+              <Image
+                src={url}
+                alt={`thumbnail-${index}`}
+                width={80}
+                height={96}
+                className="object-cover w-full h-full"
+              />
+            </Card>
+          ))}
         </div>
         <div className="relative flex-1 rounded-xl overflow-hidden bg-transparent hover:zoom-in-50 transition-transform">
           <Image
@@ -85,13 +95,36 @@ export default function ItemDetails({ product }) {
         <div>
           <h3 className="font-semibold mb-2">Description</h3>
           <p className="text-muted-foreground text-sm leading-relaxed">
-           {product.description}
+            {product.description}
           </p>
         </div>
 
         {/* CTA */}
         <div className="flex gap-4 pt-4 flex-row justify-end w-80">
-          <Button className="flex-1 h-12 text-base">Add to Cart</Button>
+          {getItemQnt === 0 ? (
+            <Button
+              onClick={() => addCart(product)}
+              className="flex-1 h-12 text-base"
+            >
+              Add to Cart
+            </Button>
+          ) : (
+            <div className="bg-black text-white">
+              <Button
+                onClick={() => addCart(product)}
+                className="flex-1 h-12 text-base"
+              >
+                +
+              </Button>
+              {getItemQnt}
+              <Button
+                onClick={() => removeCart(product)}
+                className="flex-1 h-12 text-base"
+              >
+                -
+              </Button>
+            </div>
+          )}
           <Button variant="outline" className="flex-1 h-12 text-base">
             Checkout Now
           </Button>

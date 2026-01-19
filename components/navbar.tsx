@@ -1,22 +1,28 @@
 "use client";
 
+import { useCart } from "@/store/cart";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import ShoppingCartSharpIcon from "@mui/icons-material/ShoppingCartSharp";
+import AddShoppingCartSharpIcon from "@mui/icons-material/AddShoppingCartSharp";
 
 const navItems = [
-  { name: "Home", href: "/" },
-  { name: "Products", href: "/products" },
-  { name: "Orders", href: "/orders" },
-  { name: "Profile", href: "/profile" },
+  { id: 1, name: "Home", href: "/" },
+  { id: 2, name: "Products", href: "/products" },
+  { id: 3, name: "Orders", href: "/orders" },
+  { id: 4, name: "Profile", href: "/profile" },
+  { id: 5, name: <ShoppingCartSharpIcon />, href: "/cart" },
 ];
 
 export default function Navbar() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const cart = useCart((state) => state.cart);
+  console.log("cart", cart);
 
   return (
-    <nav className="w-full border-b bg-[#FBE580]">
+    <nav className=" sticky top-0 z-50 w-full border-b bg-[#FBE580]">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
         {/* Logo */}
         <Link href="/" className="text-xl font-semibold">
@@ -37,7 +43,15 @@ export default function Navbar() {
                     : "text-gray-600 hover:text-gray-900"
                 }`}
               >
-                {item.name}
+                {item.id === 5 ? (
+                  cart.length > 0 ? (
+                    <AddShoppingCartSharpIcon />
+                  ) : (
+                    <ShoppingCartSharpIcon />
+                  )
+                ) : (
+                  item.name
+                )}
               </Link>
             );
           })}
@@ -65,7 +79,6 @@ export default function Navbar() {
           </svg>
         </button>
       </div>
-
       {/* Mobile Menu */}
       {open && (
         <div className="border-t bg-white md:hidden">
@@ -83,7 +96,16 @@ export default function Navbar() {
                       : "text-gray-700 hover:bg-gray-100"
                   }`}
                 >
-                  {item.name}
+                  {item.id === 5 ? (
+                    cart.length > 0 ? (
+                      <AddShoppingCartSharpIcon />
+                    ) : (
+                      <ShoppingCartSharpIcon />
+                    )
+                  ) : (
+                    item.name
+                  )}
+                  {/* item.name === ""?{item.name} */}
                 </Link>
               );
             })}
